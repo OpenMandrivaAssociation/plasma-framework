@@ -7,7 +7,7 @@
 
 Name: plasma-framework
 Version: 4.99.0
-Release: 1
+Release: 2
 Source0: http://ftp5.gwdg.de/pub/linux/kde/unstable/frameworks/%{version}/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
