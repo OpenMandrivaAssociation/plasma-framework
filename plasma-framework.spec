@@ -6,9 +6,9 @@
 %define debug_package %{nil}
 
 Name: plasma-framework
-Version: 4.99.0
-Release: 3
-Source0: http://ftp5.gwdg.de/pub/linux/kde/unstable/frameworks/%{version}/%{name}-%{version}.tar.xz
+Version: 5.0.0
+Release: 1
+Source0: http://ftp5.gwdg.de/pub/linux/kde/stable/frameworks/%{version}/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
@@ -25,10 +25,7 @@ BuildRequires: cmake(KF5Declarative)
 BuildRequires: cmake(KF5CoreAddons)
 BuildRequires: cmake(KF5Solid)
 BuildRequires: cmake(KF5Su)
-BuildRequires: cmake(KDeclarative)
 BuildRequires: cmake(KF5Declarative)
-BuildRequires: cmake(KdepimLibs)
-BuildRequires: cmake(Gpgme)
 BuildRequires: cmake(KF5Parts)
 BuildRequires: cmake(KF5WidgetsAddons)
 BuildRequires: cmake(ECM)
@@ -51,8 +48,7 @@ BuildRequires: cmake(KF5XmlGui)
 BuildRequires: cmake(KF5DocTools)
 BuildRequires: cmake(XCB)
 BuildRequires: cmake(Qt5)
-BuildRequires: cmake(QCA2)
-BuildRequires: cmake(DBusMenuQt)
+BuildRequires: cmake(dbusmenu-qt5)
 BuildRequires: cmake(OpenGL)
 BuildRequires: cmake(EGL)
 BuildRequires: ninja
