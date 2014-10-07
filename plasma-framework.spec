@@ -6,7 +6,7 @@
 %define debug_package %{nil}
 
 Name: plasma-framework
-Version: 5.1.0
+Version: 5.3.0
 Release: 1
 Source0: http://ftp5.gwdg.de/pub/linux/kde/stable/frameworks/%{version}/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
@@ -99,8 +99,9 @@ ninja -C build
 
 %install
 DESTDIR="%{buildroot}" ninja -C build install %{?_smp_mflags}
+%find_lang libplasma5
 
-%files
+%files -f libplasma5.lang
 %{_bindir}/dpitest
 %{_bindir}/plasmapkg2
 %{_datadir}/plasma
