@@ -93,7 +93,8 @@ Development files for PlasmaQuick
 
 %prep
 %setup -q
-%cmake -G Ninja
+%cmake -G Ninja \
+	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
 
 %build
 ninja -C build
@@ -108,9 +109,9 @@ DESTDIR="%{buildroot}" ninja -C build install %{?_smp_mflags}
 %{_datadir}/plasma
 %{_datadir}/kservices5/*
 %{_datadir}/kservicetypes5/*
-%{_libdir}/qml/org/kde/plasma
-%{_libdir}/platformqml
-%{_libdir}/plugins/*
+%{_libdir}/qt5/qml/org/kde/plasma
+%{_libdir}/qt5/platformqml
+%{_libdir}/qt5/plugins/*
 %{_datadir}/dbus-1/*/*
 %{_mandir}/man1/*
 
