@@ -7,8 +7,8 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version: 5.4.0
-Release: 2
+Version: 5.5.0
+Release: 1
 Source0: http://ftp5.gwdg.de/pub/linux/kde/%{stable}/frameworks/%{version}/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
@@ -107,6 +107,7 @@ DESTDIR="%{buildroot}" ninja -C build install %{?_smp_mflags}
 %{_bindir}/dpitest
 %{_bindir}/plasmapkg2
 %{_datadir}/plasma
+%{_datadir}/knotifications5/plasmashell.notifyrc
 %{_datadir}/kservices5/*
 %{_datadir}/kservicetypes5/*
 %{_libdir}/qt5/qml/org/kde/plasma
