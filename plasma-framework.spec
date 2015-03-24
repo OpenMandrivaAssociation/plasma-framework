@@ -7,7 +7,7 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version: 5.7.0
+Version: 5.8.0
 Release: 1
 Source0: http://ftp5.gwdg.de/pub/linux/kde/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
@@ -57,7 +57,7 @@ BuildRequires: ninja
 Requires: %{libname} = %{EVRD}
 
 %description
-Plugin based UI runtime used to write primary user interfaces
+Plugin based UI runtime used to write primary user interfaces.
 
 %package -n %{libname}
 Summary: Plugin based UI runtime used to write primary user interfaces
@@ -65,7 +65,7 @@ Group: System/Libraries
 Requires: %{name} = %{EVRD}
 
 %description -n %{libname}
-Plugin based UI runtime used to write primary user interfaces
+Plugin based UI runtime used to write primary user interfaces.
 
 %package -n %{devname}
 Summary: Development files for the KDE Frameworks 5 Plasma-framework library
@@ -73,7 +73,7 @@ Group: Development/KDE and Qt
 Requires: %{libname} = %{EVRD}
 
 %description -n %{devname}
-Development files for the KDE Frameworks 5 Plasma-framework library
+Development files for the KDE Frameworks 5 Plasma-framework library.
 
 %package -n %{qlibname}
 Summary: Plugin based UI runtime used to write primary user interfaces with QML
@@ -81,7 +81,7 @@ Group: System/Libraries
 Requires: %{libname} = %{EVRD}
 
 %description -n %{qlibname}
-Plugin based UI runtime used to write primary user interfaces with QML
+Plugin based UI runtime used to write primary user interfaces with QML.
 
 %package -n %{qdevname}
 Summary: Development files for PlasmaQuick
@@ -90,7 +90,7 @@ Requires: %{qlibname} = %{EVRD}
 Requires: %{devname} = %{EVRD}
 
 %description -n %{qdevname}
-Development files for PlasmaQuick
+Development files for PlasmaQuick.
 
 %prep
 %setup -q
