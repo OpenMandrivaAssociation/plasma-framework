@@ -17,9 +17,27 @@ Group: System/Libraries
 BuildRequires: cmake
 BuildRequires: qmake5
 BuildRequires: extra-cmake-modules5
+BuildRequires: pkgconfig(egl)
+BuildRequires: pkgconfig(gl)
 BuildRequires: pkgconfig(Qt5Core)
+BuildRequires: pkgconfig(Qt5Gui)
+BuildRequires: pkgconfig(Qt5Network)
+BuildRequires: pkgconfig(Qt5Qml)
+BuildRequires: pkgconfig(Qt5Quick)
+BuildRequires: pkgconfig(Qt5Script)
+BuildRequires: pkgconfig(Qt5Sql)
+BuildRequires: pkgconfig(Qt5Svg)
+BuildRequires: pkgconfig(Qt5Test)
+BuildRequires: pkgconfig(Qt5Widgets)
+BuildRequires: pkgconfig(Qt5X11Extras)
+BuildRequires: pkgconfig(x11)
+BuildRequires: pkgconfig(xcb)
+BuildRequires: pkgconfig(xcb-composite)
+BuildRequires: pkgconfig(xcb-damage)
+BuildRequires: pkgconfig(xcb-render)
+BuildRequires: pkgconfig(xcb-shape)
+BuildRequires: pkgconfig(xcb-xfixes)
 BuildRequires: cmake(KF5DocTools)
-BuildRequires: cmake(Qt5Test)
 BuildRequires: cmake(KF5CoreAddons)
 BuildRequires: cmake(KF5Activities)
 BuildRequires: cmake(KF5Declarative)
@@ -30,7 +48,6 @@ BuildRequires: cmake(KF5Declarative)
 BuildRequires: cmake(KF5Parts)
 BuildRequires: cmake(KF5WidgetsAddons)
 BuildRequires: cmake(ECM)
-BuildRequires: cmake(Qt5)
 BuildRequires: cmake(KF5Activities)
 BuildRequires: cmake(KF5Archive)
 BuildRequires: cmake(KF5Config)
@@ -48,11 +65,7 @@ BuildRequires: cmake(KF5WindowSystem)
 BuildRequires: cmake(KF5XmlGui)
 BuildRequires: cmake(KF5DocTools)
 BuildRequires: cmake(KF5Package)
-BuildRequires: cmake(XCB)
-BuildRequires: cmake(Qt5)
 BuildRequires: cmake(dbusmenu-qt5)
-BuildRequires: cmake(OpenGL)
-BuildRequires: cmake(EGL)
 BuildRequires: ninja
 Requires: %{libname} = %{EVRD}
 
@@ -105,7 +118,6 @@ DESTDIR="%{buildroot}" ninja -C build install %{?_smp_mflags}
 %find_lang libplasma5
 
 %files -f libplasma5.lang
-%{_bindir}/dpitest
 %{_bindir}/plasmapkg2
 %{_datadir}/plasma
 %{_datadir}/knotifications5/plasmashell.notifyrc
