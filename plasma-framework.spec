@@ -14,9 +14,6 @@ Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
 Group: System/Libraries
-BuildRequires: cmake
-BuildRequires: qmake5
-BuildRequires: extra-cmake-modules5
 BuildRequires: pkgconfig(egl)
 BuildRequires: pkgconfig(gl)
 BuildRequires: pkgconfig(Qt5Core)
@@ -66,7 +63,6 @@ BuildRequires: cmake(KF5XmlGui)
 BuildRequires: cmake(KF5DocTools)
 BuildRequires: cmake(KF5Package)
 BuildRequires: cmake(dbusmenu-qt5)
-BuildRequires: ninja
 Requires: %{libname} = %{EVRD}
 
 %description
@@ -107,14 +103,14 @@ Development files for PlasmaQuick.
 
 %prep
 %setup -q
-%cmake -G Ninja \
-	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
+%cmake_kde5
 
 %build
-ninja -C build
+%ninja -C build
 
 %install
-DESTDIR="%{buildroot}" ninja -C build install %{?_smp_mflags}
+%ninja_install -C build
+
 %find_lang libplasma5
 
 %files -f libplasma5.lang
