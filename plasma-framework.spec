@@ -56,6 +56,7 @@ BuildRequires: cmake(KF5Service)
 BuildRequires: cmake(KF5WindowSystem)
 BuildRequires: cmake(KF5XmlGui)
 BuildRequires: cmake(KF5Package)
+BuildRequires: cmake(KF5Notifications)
 BuildRequires: cmake(dbusmenu-qt5)
 Requires: %{libname} = %{EVRD}
 
