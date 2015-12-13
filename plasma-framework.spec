@@ -116,7 +116,6 @@ Development files for PlasmaQuick.
 %{_libdir}/qt5/qml/org/kde/plasma
 %{_libdir}/qt5/qml/QtQuick/Controls/Styles/Plasma
 %{_libdir}/qt5/plugins/*
-%{_datadir}/dbus-1/*/*
 %{_mandir}/man1/*
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
 
