@@ -136,3 +136,4 @@ Development files for PlasmaQuick.
 %files -n %{qdevname}
 %{_libdir}/libKF5PlasmaQuick.so
 %{_libdir}/cmake/KF5PlasmaQuick
+%{_datadir}/kdevappwizard/templates/*
