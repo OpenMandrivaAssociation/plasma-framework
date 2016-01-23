@@ -7,8 +7,8 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version:	5.18.0
-Release:	1
+Version: 5.18.0
+Release: 2
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
@@ -75,6 +75,7 @@ Plugin based UI runtime used to write primary user interfaces.
 Summary: Development files for the KDE Frameworks 5 Plasma-framework library
 Group: Development/KDE and Qt
 Requires: %{libname} = %{EVRD}
+Requires: %{qlibname} = %{EVRD}
 
 %description -n %{devname}
 Development files for the KDE Frameworks 5 Plasma-framework library.
