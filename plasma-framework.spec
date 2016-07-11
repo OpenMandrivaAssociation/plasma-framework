@@ -118,6 +118,13 @@ Development files for PlasmaQuick.
 %{_libdir}/qt5/qml/QtQuick/Controls/Styles/Plasma
 %{_libdir}/qt5/plugins/*
 %{_mandir}/man1/*
+%lang(ca) %{_mandir}/ca/man1/*
+%lang(de) %{_mandir}/de/man1/*
+%lang(it) %{_mandir}/it/man1/*
+%lang(nl) %{_mandir}/nl/man1/*
+%lang(pt_BR) %{_mandir}pt_BR/man1/*
+%lang(sv) %{_mandir}/sv/man1/*
+%lang(uk) %{_mandir}/uk/man1/*
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
 
 %files -n %{libname}
