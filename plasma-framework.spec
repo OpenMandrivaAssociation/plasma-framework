@@ -122,7 +122,7 @@ Development files for PlasmaQuick.
 %lang(de) %{_mandir}/de/man1/*
 %lang(it) %{_mandir}/it/man1/*
 %lang(nl) %{_mandir}/nl/man1/*
-%lang(pt_BR) %{_mandir}pt_BR/man1/*
+%lang(pt_BR) %{_mandir}/pt_BR/man1/*
 %lang(sv) %{_mandir}/sv/man1/*
 %lang(uk) %{_mandir}/uk/man1/*
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
