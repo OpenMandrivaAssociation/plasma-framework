@@ -7,7 +7,7 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version: 5.27.0
+Version: 5.28.0
 Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
@@ -120,6 +120,7 @@ Development files for PlasmaQuick.
 %{_mandir}/man1/*
 %lang(ca) %{_mandir}/ca/man1/*
 %lang(de) %{_mandir}/de/man1/*
+%lang(es) %{_mandir}/es/man1/*
 %lang(it) %{_mandir}/it/man1/*
 %lang(nl) %{_mandir}/nl/man1/*
 %lang(pt_BR) %{_mandir}/pt_BR/man1/*
