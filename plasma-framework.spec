@@ -8,7 +8,7 @@
 
 Name: plasma-framework
 Version: 5.29.0
-Release: 1
+Release: 2
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
@@ -57,6 +57,7 @@ BuildRequires: cmake(KF5WindowSystem)
 BuildRequires: cmake(KF5XmlGui)
 BuildRequires: cmake(KF5Package)
 BuildRequires: cmake(KF5Notifications)
+BuildRequires: cmake(KF5Wayland)
 BuildRequires: cmake(dbusmenu-qt5)
 Requires: %{libname} = %{EVRD}
 
