@@ -103,14 +103,7 @@ Development files for PlasmaQuick.
 %cmake_kde5
 
 %build
-if %ninja -C build; then
-	echo "Build has been fixed upstream - please remove the workaround"
-	exit 1
-elif ! [ `uname -m` = aarch64 ]; then
-	# Work around some confusion about where generated source files go...
-	ln -s $(pwd)/build/src/plasmaquick/KF5PlasmaQuick_autogen/include/private autotests/
-	%ninja -C build
-fi
+%ninja -C build
 
 %install
 %ninja_install -C build
