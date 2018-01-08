@@ -7,7 +7,7 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version: 5.41.0
+Version: 5.42.0
 Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 #Patch0: plasma-framework-5.33.0-buildfix.patch
@@ -120,6 +120,8 @@ Development files for PlasmaQuick.
 %{_libdir}/qt5/qml/org/kde/plasma
 %{_libdir}/qt5/qml/QtQuick/Controls/Styles/Plasma
 %{_libdir}/qt5/qml/QtQuick/Controls.2/Plasma
+%{_libdir}/qt5/qml/org/kde/kirigami.2/styles/Plasma
+%{_libdir}/qt5/qml/org/kde/kirigami.2/styles/org.kde.desktop.plasma
 %{_libdir}/qt5/plugins/*
 %{_mandir}/man1/*
 %lang(ca) %{_mandir}/ca/man1/*
