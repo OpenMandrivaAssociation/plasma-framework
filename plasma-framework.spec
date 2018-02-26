@@ -8,7 +8,7 @@
 
 Name: plasma-framework
 Version: 5.43.0
-Release: 1
+Release: 2
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 #Patch0: plasma-framework-5.33.0-buildfix.patch
 Summary: Plugin based UI runtime used to write primary user interfaces
@@ -62,6 +62,7 @@ BuildRequires: cmake(KF5Notifications)
 BuildRequires: cmake(KF5Wayland)
 BuildRequires: cmake(dbusmenu-qt5)
 Requires: %{libname} = %{EVRD}
+Conflicts: kirigami < 5.43.0
 
 %description
 Plugin based UI runtime used to write primary user interfaces.
