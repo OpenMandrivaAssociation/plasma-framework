@@ -7,7 +7,7 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version: 5.56.0
+Version: 5.56.1
 Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 #Patch0: plasma-framework-5.33.0-buildfix.patch
@@ -140,11 +140,11 @@ Development files for PlasmaQuick.
 
 %files -n %{libname}
 %{_libdir}/libKF5Plasma.so.%{major}
-%{_libdir}/libKF5Plasma.so.%{version}
+%{_libdir}/libKF5Plasma.so.%(echo %{version} |cut -d. -f1-2).0
 
 %files -n %{qlibname}
 %{_libdir}/libKF5PlasmaQuick.so.%{major}
-%{_libdir}/libKF5PlasmaQuick.so.%{version}
+%{_libdir}/libKF5PlasmaQuick.so.%(echo %{version} |cut -d. -f1-2).0
 
 %files -n %{devname}
 %{_includedir}/*
