@@ -8,9 +8,11 @@
 
 Name: plasma-framework
 Version: 5.56.1
-Release: 2
+Release: 3
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
-#Patch0: plasma-framework-5.33.0-buildfix.patch
+Patch0: 0010-Fix-breeze-dialog-background-with-Qt-5.12.2.patch
+# While we have to apply a binary patch with "git apply"...
+BuildRequires: git-core
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
@@ -104,7 +106,9 @@ Development files for PlasmaQuick.
 
 %prep
 %setup -q
-%apply_patches
+# Binary patch -- can't use regular %%patch
+git init
+git apply %{PATCH0}
 %cmake_kde5
 
 %build
