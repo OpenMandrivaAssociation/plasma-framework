@@ -7,12 +7,9 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
 Name: plasma-framework
-Version: 5.56.1
-Release: 3
+Version: 5.57.0
+Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
-Patch0: 0010-Fix-breeze-dialog-background-with-Qt-5.12.2.patch
-# While we have to apply a binary patch with "git apply"...
-BuildRequires: git-core
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
@@ -64,6 +61,8 @@ BuildRequires: cmake(KF5Package)
 BuildRequires: cmake(KF5Notifications)
 BuildRequires: cmake(KF5Wayland)
 BuildRequires: cmake(dbusmenu-qt5)
+# For QCH format docs
+BuildRequires: qt5-assistant
 Requires: %{libname} = %{EVRD}
 Conflicts: kirigami < 5.43.0
 
@@ -104,11 +103,16 @@ Requires: %{devname} = %{EVRD}
 %description -n %{qdevname}
 Development files for PlasmaQuick.
 
+%package -n %{name}-devel-docs
+Summary: Developer documentation for %{name} for use with Qt Assistant
+Group: Documentation
+Suggests: %{devname} = %{EVRD}
+
+%description -n %{name}-devel-docs
+Developer documentation for %{name} for use with Qt Assistant
+
 %prep
-%setup -q
-# Binary patch -- can't use regular %%patch
-git init
-git apply %{PATCH0}
+%autosetup -p1
 %cmake_kde5
 
 %build
@@ -159,3 +163,6 @@ git apply %{PATCH0}
 %{_libdir}/libKF5PlasmaQuick.so
 %{_libdir}/cmake/KF5PlasmaQuick
 %{_datadir}/kdevappwizard/templates/*
+
+%files -n %{name}-devel-docs
+%{_docdir}/qt5/*.{tags,qch}
