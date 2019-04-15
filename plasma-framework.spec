@@ -62,6 +62,7 @@ BuildRequires: cmake(KF5Notifications)
 BuildRequires: cmake(KF5Wayland)
 BuildRequires: cmake(dbusmenu-qt5)
 # For QCH format docs
+BuildRequires: doxygen
 BuildRequires: qt5-assistant
 Requires: %{libname} = %{EVRD}
 Conflicts: kirigami < 5.43.0
