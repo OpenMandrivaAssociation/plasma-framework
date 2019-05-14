@@ -6,6 +6,8 @@
 %define debug_package %{nil}
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
 
+%global optflags %{optflags} -O3
+
 Name: plasma-framework
 Version: 5.58.0
 Release: 1
