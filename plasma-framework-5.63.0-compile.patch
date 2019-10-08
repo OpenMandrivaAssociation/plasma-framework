@@ -1,0 +1,11 @@
+diff -up plasma-framework-5.63.0/src/declarativeimports/core/windowthumbnail.cpp.omv~ plasma-framework-5.63.0/src/declarativeimports/core/windowthumbnail.cpp
+--- plasma-framework-5.63.0/src/declarativeimports/core/windowthumbnail.cpp.omv~	2019-10-08 12:48:31.373104182 +0200
++++ plasma-framework-5.63.0/src/declarativeimports/core/windowthumbnail.cpp	2019-10-08 12:48:40.742128615 +0200
+@@ -32,6 +32,7 @@
+ #include <xcb/composite.h>
+ #if HAVE_GLX
+ #include <GL/glx.h>
++#include <GL/glext.h>
+ typedef void (*glXBindTexImageEXT_func)(Display *dpy, GLXDrawable drawable,
+                                         int buffer, const int *attrib_list);
+ typedef void (*glXReleaseTexImageEXT_func)(Display *dpy, GLXDrawable drawable, int buffer);

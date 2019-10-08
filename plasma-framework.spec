@@ -9,9 +9,10 @@
 %global optflags %{optflags} -O3
 
 Name: plasma-framework
-Version: 5.62.0
+Version: 5.63.0
 Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
+Patch0: plasma-framework-5.63.0-compile.patch
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
@@ -129,6 +130,7 @@ Developer documentation for %{name} for use with Qt Assistant
 %files -f libplasma5.lang
 %{_bindir}/plasmapkg2
 %{_datadir}/plasma
+%{_datadir}/qlogging-categories5/plasma-framework.categories
 %{_datadir}/kservices5/*
 %{_datadir}/kservicetypes5/*
 %{_libdir}/qt5/qml/org/kde/plasma
