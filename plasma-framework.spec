@@ -9,8 +9,8 @@
 %global optflags %{optflags} -O3
 
 Name: plasma-framework
-Version: 5.66.0
-Release: 2
+Version: 5.67.0
+Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 Patch0: plasma-framework-5.63.0-compile.patch
 Summary: Plugin based UI runtime used to write primary user interfaces
