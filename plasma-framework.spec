@@ -9,7 +9,7 @@
 %global optflags %{optflags} -O3
 
 Name: plasma-framework
-Version: 5.71.0
+Version: 5.72.0
 Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 Patch0: plasma-framework-5.63.0-compile.patch
@@ -125,7 +125,7 @@ Developer documentation for %{name} for use with Qt Assistant
 %install
 %ninja_install -C build
 
-%find_lang libplasma5
+%find_lang libplasma5 --all-name --with-man
 
 %files -f libplasma5.lang
 %{_bindir}/plasmapkg2
@@ -140,15 +140,6 @@ Developer documentation for %{name} for use with Qt Assistant
 %{_libdir}/qt5/qml/org/kde/kirigami.2/styles/org.kde.desktop.plasma
 %{_libdir}/qt5/plugins/*
 %{_mandir}/man1/*
-%lang(ca) %{_mandir}/ca/man1/*
-%lang(de) %{_mandir}/de/man1/*
-%lang(es) %{_mandir}/es/man1/*
-%lang(it) %{_mandir}/it/man1/*
-%lang(nl) %{_mandir}/nl/man1/*
-%lang(pt) %{_mandir}/pt/man1/*
-%lang(pt_BR) %{_mandir}/pt_BR/man1/*
-%lang(sv) %{_mandir}/sv/man1/*
-%lang(uk) %{_mandir}/uk/man1/*
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
 
 %files -n %{libname}
