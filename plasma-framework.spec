@@ -9,8 +9,10 @@
 
 Name: plasma-framework
 Version: 5.85.0
-Release: 1
+Release: 2
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
+# Backports recommended by upstream
+Patch100: https://invent.kde.org/frameworks/plasma-framework/-/commit/837bb6975f6a0661d211107823b7587808fc3d4e.patch
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
