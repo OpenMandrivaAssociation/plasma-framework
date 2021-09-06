@@ -8,11 +8,10 @@
 %global optflags %{optflags} -O3
 
 Name: plasma-framework
-Version: 5.85.0
-Release: 2
+Version: 5.86.0
+Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 # Backports recommended by upstream
-Patch100: https://invent.kde.org/frameworks/plasma-framework/-/commit/837bb6975f6a0661d211107823b7587808fc3d4e.patch
 Summary: Plugin based UI runtime used to write primary user interfaces
 URL: http://kde.org/
 License: GPL
@@ -137,7 +136,6 @@ Developer documentation for %{name} for use with Qt Assistant
 %{_libdir}/qt5/qml/QtQuick/Controls/Styles/Plasma
 %{_libdir}/qt5/qml/QtQuick/Controls.2/Plasma
 %{_libdir}/qt5/qml/org/kde/kirigami.2/styles/Plasma
-%{_libdir}/qt5/qml/org/kde/kirigami.2/styles/org.kde.desktop.plasma
 %{_libdir}/qt5/plugins/*
 %{_mandir}/man1/*
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
