@@ -1,27 +1,30 @@
-From d247b37ab0062beccd2f9cb6a9ff2b7244cb36dc Mon Sep 17 00:00:00 2001
+From f92c1f20cfd30c9da5fa018471f9fbf495bd137b Mon Sep 17 00:00:00 2001
 From: Aleix Pol <aleixpol@kde.org>
 Date: Tue, 13 Sep 2022 16:12:48 +0200
 Subject: [PATCH] Install a plugin for org.kde.plasma.plasmoid
 
-Allows tooling to introspect what the module does, even though we
-generally inject it through declarativeappletscript.
+Allows tooling to introspect what the module does.
+
+This used to be done through DeclarativeAppletScript, which limited the
+possibilities of our tooling.
 
 BUG: 454062
 ---
- CMakeLists.txt                                |  2 ++
- src/declarativeimports/CMakeLists.txt         |  1 +
- .../plasmoid/CMakeLists.txt                   | 14 +++++++++++
- .../plasmoid/plasmoidplugin.cpp               | 24 +++++++++++++++++++
- src/scriptengines/qml/CMakeLists.txt          | 23 ++++++++++++------
- .../qml/plasmoid/declarativeappletscript.cpp  |  4 ----
- .../declarativeappletscriptplugin.cpp         | 12 ++++++++++
- 7 files changed, 69 insertions(+), 11 deletions(-)
- create mode 100644 src/declarativeimports/plasmoid/CMakeLists.txt
- create mode 100644 src/declarativeimports/plasmoid/plasmoidplugin.cpp
+ CMakeLists.txt                                |  2 +
+ src/scriptengines/qml/CMakeLists.txt          | 42 +++++++++++++++----
+ .../qml/plasmoid/appletinterface.h            |  2 +-
+ .../qml/plasmoid/containmentinterface.h       |  2 +-
+ .../qml/plasmoid/declarativeappletscript.cpp  | 18 +-------
+ .../qml/plasmoid/declarativeappletscript.h    |  3 +-
+ .../declarativeappletscriptplugin.cpp         | 12 ++++++
+ .../qml/plasmoid/plasmoidplugin.cpp           | 28 +++++++++++++
+ .../qml/plasmoid/wallpaperinterface.h         |  3 +-
+ 9 files changed, 84 insertions(+), 28 deletions(-)
  create mode 100644 src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp
+ create mode 100644 src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9aa4e1506..340d93db9 100644
+index 176e66bd8..48b1ea0e3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -28,6 +28,8 @@ include(ECMGenerateQmlTypes)
@@ -33,81 +36,22 @@ index 9aa4e1506..340d93db9 100644
  
  option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
  add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
-diff --git a/src/declarativeimports/CMakeLists.txt b/src/declarativeimports/CMakeLists.txt
-index 1515cc99a..ae9c8d16b 100644
---- a/src/declarativeimports/CMakeLists.txt
-+++ b/src/declarativeimports/CMakeLists.txt
-@@ -5,6 +5,7 @@ add_subdirectory(plasmaextracomponents)
- add_subdirectory(platformcomponents)
- add_subdirectory(calendar)
- add_subdirectory(kirigamiplasmastyle)
-+add_subdirectory(plasmoid)
- 
- install(DIRECTORY plasmastyle/ DESTINATION ${KDE_INSTALL_QMLDIR}/QtQuick/Controls/Styles/Plasma)
- 
-diff --git a/src/declarativeimports/plasmoid/CMakeLists.txt b/src/declarativeimports/plasmoid/CMakeLists.txt
-new file mode 100644
-index 000000000..9dbbb6dfb
---- /dev/null
-+++ b/src/declarativeimports/plasmoid/CMakeLists.txt
-@@ -0,0 +1,14 @@
-+ecm_add_qml_module(plasmoidplugin URI "org.kde.plasma.plasmoid" VERSION 2.0 CLASSNAME plasmoidplugin)
-+
-+target_sources(plasmoidplugin PRIVATE
-+    plasmoidplugin.cpp
-+)
-+
-+target_link_libraries(plasmoidplugin PRIVATE
-+    plasma_appletscript_object
-+)
-+
-+install(TARGETS plasmoidplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/plasmoid)
-+
-+ecm_finalize_qml_module(plasmoidplugin DESTINATION ${KDE_INSTALL_QMLDIR})
-+ecm_generate_qmltypes(org.kde.plasma.plasmoid 2.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/plasmoid)
-diff --git a/src/declarativeimports/plasmoid/plasmoidplugin.cpp b/src/declarativeimports/plasmoid/plasmoidplugin.cpp
-new file mode 100644
-index 000000000..28c814477
---- /dev/null
-+++ b/src/declarativeimports/plasmoid/plasmoidplugin.cpp
-@@ -0,0 +1,24 @@
-+/*
-+    SPDX-FileCopyrightText: 2009 Alan Alpert <alan.alpert@nokia.com>
-+    SPDX-FileCopyrightText: 2010 Ménard Alexis <menard@kde.org>
-+    SPDX-FileCopyrightText: 2022 Aleix Pol Gonzalez <aleixpol@kde.org>
-+
-+    SPDX-License-Identifier: LGPL-2.0-or-later
-+*/
-+
-+#include "../../scriptengines/qml/plasmoid/appletinterface.h"
-+#include <QQmlExtensionPlugin>
-+
-+class PlasmoidPlugin : public QQmlExtensionPlugin
-+{
-+    Q_OBJECT
-+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
-+
-+public:
-+    void registerTypes(const char *uri) override
-+    {
-+        qmlRegisterUncreatableType<AppletInterface>(uri, 2, 0, "Plasmoid", QStringLiteral("Do not create objects of type Plasmoid"));
-+    }
-+};
-+
-+#include "plasmoidplugin.moc"
 diff --git a/src/scriptengines/qml/CMakeLists.txt b/src/scriptengines/qml/CMakeLists.txt
-index 1fc0dd13e..52cbb8a2e 100644
+index 1fc0dd13e..b5880f6cd 100644
 --- a/src/scriptengines/qml/CMakeLists.txt
 +++ b/src/scriptengines/qml/CMakeLists.txt
-@@ -6,19 +6,17 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
+@@ -5,20 +5,19 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
+     set(PLASMA_NO_SOLID TRUE)
  endif()
  
- #DECLARATIVE APPLET
+-#DECLARATIVE APPLET
 -add_library(plasma_appletscript_declarative MODULE)
-+add_library(plasma_appletscript_object OBJECT)
++# PLASMOID LIBRARY
  
 -target_sources(plasma_appletscript_declarative PRIVATE
 -    plasmoid/declarativeappletscript.cpp
++add_library(plasma_appletscript_object SHARED)
++
 +target_sources(plasma_appletscript_object PRIVATE
      plasmoid/dropmenu.cpp
      plasmoid/appletinterface.cpp
@@ -123,11 +67,12 @@ index 1fc0dd13e..52cbb8a2e 100644
      Qt${QT_MAJOR_VERSION}::Quick
      Qt${QT_MAJOR_VERSION}::Qml
      KF5::Activities
-@@ -33,8 +31,19 @@ target_link_libraries(plasma_appletscript_declarative
+@@ -33,12 +32,39 @@ target_link_libraries(plasma_appletscript_declarative
      KF5::Package
      KF5::Notifications
  )
 +
++# DECLARATIVE APPLET
 +add_library(plasma_appletscript_declarative MODULE)
 +target_sources(plasma_appletscript_declarative PRIVATE
 +    plasmoid/declarativeappletscriptplugin.cpp
@@ -144,11 +89,79 @@ index 1fc0dd13e..52cbb8a2e 100644
  endif()
  
  
++install(TARGETS plasma_appletscript_object ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+ install(TARGETS plasma_appletscript_declarative DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/scriptengines)
+ install(FILES data/plasma-wallpaper.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})
+ 
++# QML PLUGIN
++ecm_add_qml_module(plasmoidplugin URI "org.kde.plasma.plasmoid" VERSION 2.0 CLASSNAME plasmoidplugin)
++
++target_sources(plasmoidplugin PRIVATE
++    plasmoid/plasmoidplugin.cpp
++)
++
++target_link_libraries(plasmoidplugin PRIVATE
++    plasma_appletscript_object
++)
++
++install(TARGETS plasmoidplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/plasmoid)
+ 
++ecm_finalize_qml_module(plasmoidplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_generate_qmltypes(org.kde.plasma.plasmoid 2.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/plasmoid)
+diff --git a/src/scriptengines/qml/plasmoid/appletinterface.h b/src/scriptengines/qml/plasmoid/appletinterface.h
+index 1aa05cac0..ae717a283 100644
+--- a/src/scriptengines/qml/plasmoid/appletinterface.h
++++ b/src/scriptengines/qml/plasmoid/appletinterface.h
+@@ -48,7 +48,7 @@ class ConfigLoader;
+  *
+  * \@import org.kde.plasma.plasmoid
+  */
+-class AppletInterface : public PlasmaQuick::AppletQuickItem
++class PLASMAQUICK_EXPORT AppletInterface : public PlasmaQuick::AppletQuickItem
+ {
+     Q_OBJECT
+ 
+diff --git a/src/scriptengines/qml/plasmoid/containmentinterface.h b/src/scriptengines/qml/plasmoid/containmentinterface.h
+index 6683ca5db..a2171acca 100644
+--- a/src/scriptengines/qml/plasmoid/containmentinterface.h
++++ b/src/scriptengines/qml/plasmoid/containmentinterface.h
+@@ -35,7 +35,7 @@ class Info;
+  *
+  *
+  */
+-class ContainmentInterface : public AppletInterface
++class PLASMAQUICK_EXPORT ContainmentInterface : public AppletInterface
+ {
+     Q_OBJECT
+ 
 diff --git a/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp b/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
-index 817052b83..0bc36de4d 100644
+index 817052b83..4675c63d0 100644
 --- a/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
 +++ b/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
-@@ -119,7 +119,3 @@ QList<QAction *> DeclarativeAppletScript::contextualActions()
+@@ -43,20 +43,10 @@ DeclarativeAppletScript::DeclarativeAppletScript(QObject *parent, const QVariant
+     , m_interface(nullptr)
+     , m_args(args)
+ {
+-    const char *uri = "org.kde.plasma.plasmoid";
+-    // qmlRegisterType<AppletInterface>();
+-    // FIXME: use this if/when will be possible to have properties of attached items subclasses on the left hand of expressions
+-    /*qmlRegisterUncreatableType<AppletLoader>("org.kde.plasma.plasmoid", 2, 0, "Plasmoid",
+-                                             QLatin1String("Do not create objects of type Plasmoid"));*/
+-    qmlRegisterUncreatableType<AppletInterface>(uri, 2, 0, "Plasmoid", QStringLiteral("Do not create objects of type Plasmoid"));
+-    qmlRegisterUncreatableType<ContainmentInterface>(uri, 2, 0, "Containment", QStringLiteral("Do not create objects of type Containment"));
+-
+-    qmlRegisterUncreatableType<WallpaperInterface>(uri, 2, 0, "Wallpaper", QStringLiteral("Do not create objects of type Wallpaper"));
+-
+ #if KDECLARATIVE_BUILD_DEPRECATED_SINCE(5, 89)
+-    qmlRegisterAnonymousType<KDeclarative::ConfigPropertyMap>(uri, 1);
++    qmlRegisterAnonymousType<KDeclarative::ConfigPropertyMap>("", 1);
+ #else
+-    qmlRegisterAnonymousType<KConfigPropertyMap>(uri, 1);
++    qmlRegisterAnonymousType<KConfigPropertyMap>("", 1);
+ #endif
+ }
+ 
+@@ -119,7 +109,3 @@ QList<QAction *> DeclarativeAppletScript::contextualActions()
  
      return m_interface->contextualActions();
  }
@@ -156,6 +169,23 @@ index 817052b83..0bc36de4d 100644
 -K_PLUGIN_CLASS_WITH_JSON(DeclarativeAppletScript, "plasma-scriptengine-applet-declarative.json")
 -
 -#include "declarativeappletscript.moc"
+diff --git a/src/scriptengines/qml/plasmoid/declarativeappletscript.h b/src/scriptengines/qml/plasmoid/declarativeappletscript.h
+index 4a1d77e31..f3446f2c0 100644
+--- a/src/scriptengines/qml/plasmoid/declarativeappletscript.h
++++ b/src/scriptengines/qml/plasmoid/declarativeappletscript.h
+@@ -12,10 +12,11 @@
+ #include <QSet>
+ 
+ #include <plasma/scripting/appletscript.h>
++#include <plasmaquick/plasmaquick_export.h>
+ 
+ class AppletInterface;
+ 
+-class DeclarativeAppletScript : public Plasma::AppletScript
++class PLASMAQUICK_EXPORT DeclarativeAppletScript : public Plasma::AppletScript
+ {
+     Q_OBJECT
+ 
 diff --git a/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp b/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp
 new file mode 100644
 index 000000000..386c072ba
@@ -174,6 +204,61 @@ index 000000000..386c072ba
 +K_PLUGIN_CLASS_WITH_JSON(DeclarativeAppletScript, "plasma-scriptengine-applet-declarative.json")
 +
 +#include "declarativeappletscriptplugin.moc"
+diff --git a/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp b/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
+new file mode 100644
+index 000000000..9079421d1
+--- /dev/null
++++ b/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
+@@ -0,0 +1,28 @@
++/*
++    SPDX-FileCopyrightText: 2009 Alan Alpert <alan.alpert@nokia.com>
++    SPDX-FileCopyrightText: 2010 Ménard Alexis <menard@kde.org>
++    SPDX-FileCopyrightText: 2022 Aleix Pol Gonzalez <aleixpol@kde.org>
++
++    SPDX-License-Identifier: LGPL-2.0-or-later
++*/
++
++#include "../../scriptengines/qml/plasmoid/appletinterface.h"
++#include "../../scriptengines/qml/plasmoid/containmentinterface.h"
++#include "../../scriptengines/qml/plasmoid/wallpaperinterface.h"
++#include <QQmlExtensionPlugin>
++
++class PlasmoidPlugin : public QQmlExtensionPlugin
++{
++    Q_OBJECT
++    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
++
++public:
++    void registerTypes(const char *uri) override
++    {
++        qmlRegisterUncreatableType<AppletInterface>(uri, 2, 0, "Plasmoid", QStringLiteral("Do not create objects of type Plasmoid"));
++        qmlRegisterUncreatableType<ContainmentInterface>(uri, 2, 0, "Containment", QStringLiteral("Do not create objects of type Containment"));
++        qmlRegisterUncreatableType<WallpaperInterface>(uri, 2, 0, "Wallpaper", QStringLiteral("Do not create objects of type Wallpaper"));
++    }
++};
++
++#include "plasmoidplugin.moc"
+diff --git a/src/scriptengines/qml/plasmoid/wallpaperinterface.h b/src/scriptengines/qml/plasmoid/wallpaperinterface.h
+index b77ccf28b..d541f4426 100644
+--- a/src/scriptengines/qml/plasmoid/wallpaperinterface.h
++++ b/src/scriptengines/qml/plasmoid/wallpaperinterface.h
+@@ -10,6 +10,7 @@
+ #include <QQmlEngine>
+ #include <QQuickItem>
+ 
++#include "plasmaquick_export.h"
+ #include <KPackage/Package>
+ #include <kdeclarative/kdeclarative_export.h>
+ 
+@@ -34,7 +35,7 @@ class QmlObject;
+  *
+  *
+  */
+-class WallpaperInterface : public QQuickItem
++class PLASMAQUICK_EXPORT WallpaperInterface : public QQuickItem
+ {
+     Q_OBJECT
+ 
 -- 
 GitLab
 

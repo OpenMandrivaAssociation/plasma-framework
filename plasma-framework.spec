@@ -9,7 +9,7 @@
 
 Name: plasma-framework
 Version: 5.98.0
-Release: 2
+Release: 3
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 # Backports recommended by upstream
 # https://bugs.kde.org/show_bug.cgi?id=454062
@@ -138,6 +138,7 @@ Developer documentation for %{name} for use with Qt Assistant
 %{_libdir}/qt5/qml/QtQuick/Controls.2/Plasma
 %{_libdir}/qt5/qml/org/kde/kirigami.2/styles/Plasma
 %{_libdir}/qt5/plugins/*
+%{_libdir}/libplasma_appletscript_object.so
 %{_mandir}/man1/*
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
 
