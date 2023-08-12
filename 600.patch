@@ -1,32 +1,6 @@
-From f92c1f20cfd30c9da5fa018471f9fbf495bd137b Mon Sep 17 00:00:00 2001
-From: Aleix Pol <aleixpol@kde.org>
-Date: Tue, 13 Sep 2022 16:12:48 +0200
-Subject: [PATCH] Install a plugin for org.kde.plasma.plasmoid
-
-Allows tooling to introspect what the module does.
-
-This used to be done through DeclarativeAppletScript, which limited the
-possibilities of our tooling.
-
-BUG: 454062
----
- CMakeLists.txt                                |  2 +
- src/scriptengines/qml/CMakeLists.txt          | 42 +++++++++++++++----
- .../qml/plasmoid/appletinterface.h            |  2 +-
- .../qml/plasmoid/containmentinterface.h       |  2 +-
- .../qml/plasmoid/declarativeappletscript.cpp  | 18 +-------
- .../qml/plasmoid/declarativeappletscript.h    |  3 +-
- .../declarativeappletscriptplugin.cpp         | 12 ++++++
- .../qml/plasmoid/plasmoidplugin.cpp           | 28 +++++++++++++
- .../qml/plasmoid/wallpaperinterface.h         |  3 +-
- 9 files changed, 84 insertions(+), 28 deletions(-)
- create mode 100644 src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp
- create mode 100644 src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
-
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 176e66bd8..48b1ea0e3 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
+diff -up plasma-framework-5.109.0/CMakeLists.txt.1~ plasma-framework-5.109.0/CMakeLists.txt
+--- plasma-framework-5.109.0/CMakeLists.txt.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/CMakeLists.txt	2023-08-12 17:00:35.225587511 +0200
 @@ -28,6 +28,8 @@ include(ECMGenerateQmlTypes)
  include(ECMSetupQtPluginMacroNames)
  include(ECMMarkNonGuiExecutable)
@@ -36,11 +10,10 @@ index 176e66bd8..48b1ea0e3 100644
  
  option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
  add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
-diff --git a/src/scriptengines/qml/CMakeLists.txt b/src/scriptengines/qml/CMakeLists.txt
-index 1fc0dd13e..b5880f6cd 100644
---- a/src/scriptengines/qml/CMakeLists.txt
-+++ b/src/scriptengines/qml/CMakeLists.txt
-@@ -5,20 +5,19 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/CMakeLists.txt.1~ plasma-framework-5.109.0/src/scriptengines/qml/CMakeLists.txt
+--- plasma-framework-5.109.0/src/scriptengines/qml/CMakeLists.txt.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/CMakeLists.txt	2023-08-12 17:00:35.225587511 +0200
+@@ -5,20 +5,19 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBL
      set(PLASMA_NO_SOLID TRUE)
  endif()
  
@@ -67,7 +40,7 @@ index 1fc0dd13e..b5880f6cd 100644
      Qt${QT_MAJOR_VERSION}::Quick
      Qt${QT_MAJOR_VERSION}::Qml
      KF5::Activities
-@@ -33,12 +32,39 @@ target_link_libraries(plasma_appletscript_declarative
+@@ -33,12 +32,39 @@ target_link_libraries(plasma_appletscrip
      KF5::Package
      KF5::Notifications
  )
@@ -108,10 +81,9 @@ index 1fc0dd13e..b5880f6cd 100644
  
 +ecm_finalize_qml_module(plasmoidplugin DESTINATION ${KDE_INSTALL_QMLDIR})
 +ecm_generate_qmltypes(org.kde.plasma.plasmoid 2.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/plasmoid)
-diff --git a/src/scriptengines/qml/plasmoid/appletinterface.h b/src/scriptengines/qml/plasmoid/appletinterface.h
-index 1aa05cac0..ae717a283 100644
---- a/src/scriptengines/qml/plasmoid/appletinterface.h
-+++ b/src/scriptengines/qml/plasmoid/appletinterface.h
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/appletinterface.h.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/appletinterface.h
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/appletinterface.h.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/appletinterface.h	2023-08-12 17:00:35.225587511 +0200
 @@ -48,7 +48,7 @@ class ConfigLoader;
   *
   * \@import org.kde.plasma.plasmoid
@@ -121,11 +93,10 @@ index 1aa05cac0..ae717a283 100644
  {
      Q_OBJECT
  
-diff --git a/src/scriptengines/qml/plasmoid/containmentinterface.h b/src/scriptengines/qml/plasmoid/containmentinterface.h
-index 6683ca5db..a2171acca 100644
---- a/src/scriptengines/qml/plasmoid/containmentinterface.h
-+++ b/src/scriptengines/qml/plasmoid/containmentinterface.h
-@@ -35,7 +35,7 @@ class Info;
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/containmentinterface.h.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/containmentinterface.h
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/containmentinterface.h.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/containmentinterface.h	2023-08-12 17:00:35.225587511 +0200
+@@ -36,7 +36,7 @@ class Info;
   *
   *
   */
@@ -134,11 +105,10 @@ index 6683ca5db..a2171acca 100644
  {
      Q_OBJECT
  
-diff --git a/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp b/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
-index 817052b83..4675c63d0 100644
---- a/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
-+++ b/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
-@@ -43,20 +43,10 @@ DeclarativeAppletScript::DeclarativeAppletScript(QObject *parent, const QVariant
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.cpp	2023-08-12 17:04:33.615019169 +0200
+@@ -43,20 +43,10 @@ DeclarativeAppletScript::DeclarativeAppl
      , m_interface(nullptr)
      , m_args(args)
  {
@@ -161,7 +131,7 @@ index 817052b83..4675c63d0 100644
  #endif
  }
  
-@@ -119,7 +109,3 @@ QList<QAction *> DeclarativeAppletScript::contextualActions()
+@@ -119,8 +109,3 @@ QList<QAction *> DeclarativeAppletScript
  
      return m_interface->contextualActions();
  }
@@ -169,10 +139,10 @@ index 817052b83..4675c63d0 100644
 -K_PLUGIN_CLASS_WITH_JSON(DeclarativeAppletScript, "plasma-scriptengine-applet-declarative.json")
 -
 -#include "declarativeappletscript.moc"
-diff --git a/src/scriptengines/qml/plasmoid/declarativeappletscript.h b/src/scriptengines/qml/plasmoid/declarativeappletscript.h
-index 4a1d77e31..f3446f2c0 100644
---- a/src/scriptengines/qml/plasmoid/declarativeappletscript.h
-+++ b/src/scriptengines/qml/plasmoid/declarativeappletscript.h
+-#include "moc_declarativeappletscript.cpp"
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.h.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.h
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.h.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscript.h	2023-08-12 17:00:35.225587511 +0200
 @@ -12,10 +12,11 @@
  #include <QSet>
  
@@ -186,11 +156,9 @@ index 4a1d77e31..f3446f2c0 100644
  {
      Q_OBJECT
  
-diff --git a/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp b/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp
-new file mode 100644
-index 000000000..386c072ba
---- /dev/null
-+++ b/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp.1~	2023-08-12 17:00:35.225587511 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/declarativeappletscriptplugin.cpp	2023-08-12 17:00:35.225587511 +0200
 @@ -0,0 +1,12 @@
 +/*
 +    SPDX-FileCopyrightText: 2009 Alan Alpert <alan.alpert@nokia.com>
@@ -204,11 +172,9 @@ index 000000000..386c072ba
 +K_PLUGIN_CLASS_WITH_JSON(DeclarativeAppletScript, "plasma-scriptengine-applet-declarative.json")
 +
 +#include "declarativeappletscriptplugin.moc"
-diff --git a/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp b/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
-new file mode 100644
-index 000000000..9079421d1
---- /dev/null
-+++ b/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp.1~	2023-08-12 17:00:35.225587511 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/plasmoidplugin.cpp	2023-08-12 17:00:35.225587511 +0200
 @@ -0,0 +1,28 @@
 +/*
 +    SPDX-FileCopyrightText: 2009 Alan Alpert <alan.alpert@nokia.com>
@@ -238,10 +204,9 @@ index 000000000..9079421d1
 +};
 +
 +#include "plasmoidplugin.moc"
-diff --git a/src/scriptengines/qml/plasmoid/wallpaperinterface.h b/src/scriptengines/qml/plasmoid/wallpaperinterface.h
-index b77ccf28b..d541f4426 100644
---- a/src/scriptengines/qml/plasmoid/wallpaperinterface.h
-+++ b/src/scriptengines/qml/plasmoid/wallpaperinterface.h
+diff -up plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/wallpaperinterface.h.1~ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/wallpaperinterface.h
+--- plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/wallpaperinterface.h.1~	2023-08-05 14:40:37.000000000 +0200
++++ plasma-framework-5.109.0/src/scriptengines/qml/plasmoid/wallpaperinterface.h	2023-08-12 17:00:35.225587511 +0200
 @@ -10,6 +10,7 @@
  #include <QQmlEngine>
  #include <QQuickItem>
@@ -259,6 +224,3 @@ index b77ccf28b..d541f4426 100644
  {
      Q_OBJECT
  
--- 
-GitLab
-
