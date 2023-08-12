@@ -70,6 +70,8 @@ BuildRequires: doxygen
 BuildRequires: qt5-assistant
 Requires: %{libname} = %{EVRD}
 Conflicts: kirigami < 5.43.0
+# Provided by kf6-plasma-framework
+Requires: plasma-framework-common
 
 %description
 Plugin based UI runtime used to write primary user interfaces.
@@ -126,11 +128,16 @@ Developer documentation for %{name} for use with Qt Assistant
 %install
 %ninja_install -C build
 
+# Remove dupes from kf6
+rm -rf \
+	%{buildroot}%{_datadir}/plasma/desktoptheme/{breeze-dark,breeze-light,default} \
+	%{buildroot}%{_datadir}/plasma/desktoptheme/oxygen/{colors,dialogs,metadata.json,opaque,plasmarc,widgets}
+
 %find_lang libplasma5 --all-name --with-man
 
 %files -f libplasma5.lang
 %{_bindir}/plasmapkg2
-%{_datadir}/plasma
+%{_datadir}/plasma/*
 %{_datadir}/qlogging-categories5/plasma-framework.*categories
 %{_datadir}/kservicetypes5/*
 %{_libdir}/qt5/qml/org/kde/plasma
