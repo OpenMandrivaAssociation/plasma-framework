@@ -8,8 +8,8 @@
 %global optflags %{optflags} -O3
 
 Name: plasma-framework
-Version: 5.112.0
-Release: 2
+Version: 5.113.0
+Release: 1
 Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d. -f1-2)/%{name}-%{version}.tar.xz
 # Backports recommended by upstream
 # https://bugs.kde.org/show_bug.cgi?id=454062
@@ -147,7 +147,6 @@ rm -rf \
 %{_libdir}/qt5/plugins/*
 %{_libdir}/libplasma_appletscript_object.so
 %{_mandir}/man1/*
-%lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5
 
 %files -n %{libname}
 %{_libdir}/libKF5Plasma.so.%{major}
