@@ -64,6 +64,7 @@ BuildRequires: cmake(KF5XmlGui)
 BuildRequires: cmake(KF5Package)
 BuildRequires: cmake(KF5Notifications)
 BuildRequires: cmake(KF5Wayland)
+BuildRequires: cmake(KF5Kirigami2)
 BuildRequires: cmake(dbusmenu-qt5)
 # For QCH format docs
 BuildRequires: doxygen
