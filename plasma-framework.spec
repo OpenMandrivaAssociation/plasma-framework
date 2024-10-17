@@ -15,7 +15,7 @@ Source0: http://download.kde.org/%{stable}/frameworks/%(echo %{version} |cut -d.
 # https://bugs.kde.org/show_bug.cgi?id=454062
 Patch0: https://invent.kde.org/frameworks/plasma-framework/-/merge_requests/600.patch
 Summary: Plugin based UI runtime used to write primary user interfaces
-URL: http://kde.org/
+URL: https://kde.org/
 License: GPL
 Group: System/Libraries
 BuildRequires: pkgconfig(egl)
